@@ -1,0 +1,48 @@
+public class Main {
+    public static void main(String[] args) {
+        double start1 = -2;
+        double end1 = 2;
+        double step1 = 0.1;
+
+        System.out.println("Tabulation of function y = x^2 * sin(x):");
+        System.out.println("------------------------------------");
+        System.out.printf("%8s | %10s%n", "x", "y");
+        System.out.println("------------------------------------");
+
+        //табулювання функції на проміжку [-2; 2] з кроком 0.1
+        for (double x = start1; x <= end1 + 1e-9; x += step1) {
+            double y = Math.pow(x, 2) * Math.sin(x);
+
+            System.out.printf("%8.2f | %10.4f%n", x, y);
+        }
+
+        System.out.println();
+
+        double start2 = 6;
+        double end2 = 8;
+        double step2 = 0.2;
+
+        System.out.println("Tabulation of piecewise function:");
+        System.out.println("-----------------------------------------");
+        System.out.printf("%8s | %12s%n", "x", "y");
+        System.out.println("-----------------------------------------");
+
+        //  табулювання  функції на проміжку [6; 8] з кроком 0.2
+        for (double x = start2; x <= end2 + 1e-9; x += step2) {
+
+            String yStr = "undefined";
+
+            if (x < 7) {
+                if (x > -1) {
+                    double y = Math.sqrt(2.0 / (x + 1));
+                    yStr = String.format("%12.6f", y);
+                }
+            } else {
+                double y = x * Math.cos(x);
+                yStr = String.format("%12.6f", y);
+            }
+
+            System.out.printf("%8.2f | %s%n", x, yStr);
+        }
+    }
+}
