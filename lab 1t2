@@ -1,0 +1,40 @@
+import java.util.Random;
+
+public class Main {
+    public static void main(String[] args) {
+        int N = 10;
+        int[][] A = new int[N][N];
+        Random rand = new Random();
+
+        System.out.println("Matrix A:");
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                A[i][j] = rand.nextInt(21) - 10;
+                System.out.printf("%4d", A[i][j]);
+            }
+            System.out.println();
+        }
+
+        // Лічильник додатних елементів на головній і побічній діагоналях
+        int positiveCount = 0;
+        for (int i = 0; i < N; i++) {
+               // Перевірка елемента головної діагоналі (A[i][i])
+            if (A[i][i] > 0) {
+                positiveCount++;
+            }
+            // Перевірка елемента побічної діагоналі (A[i][N-1-i])
+            if (A[i][N - 1 - i] > 0 && i != N - 1 - i) {
+                positiveCount++;
+            }
+        }
+
+        System.out.println("\nNumber of positive elements on diagonals: " + positiveCount);
+              // Обчислення факторіала від знайденої кількості
+        long factorial = 1;
+        for (int i = 1; i <= positiveCount; i++) {
+            factorial *= i;
+        }
+        // Виведення факторіала
+        System.out.println("Factorial of this number = " + factorial);
+    }
+}
