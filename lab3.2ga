@@ -1,0 +1,66 @@
+import java.util.Scanner;
+
+// Абстрактний клас
+abstract class Shape {
+    public abstract double getArea(); // абстрактний метод для площі
+}
+
+// Прямокутник
+class Rectangle extends Shape {
+    private double length;
+    private double width;
+
+    public Rectangle(double length, double width) {
+        this.length = length;
+        this.width = width;
+    }
+
+    @Override
+    public double getArea() {
+        return length * width;
+    }
+}
+
+// Прямокутний трикутник
+class RightTriangle extends Shape {
+    private double a;
+    private double b;
+
+    public RightTriangle(double a, double b) {
+        this.a = a;
+        this.b = b;
+    }
+
+    @Override
+    public double getArea() {
+        return (a * b) / 2.0;
+    }
+}
+
+// Головний клас
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Прямокутник
+        System.out.print("Введіть довжину прямокутника: ");
+        double length = sc.nextDouble();
+        System.out.print("Введіть ширину прямокутника: ");
+        double width = sc.nextDouble();
+        Shape rectangle = new Rectangle(length, width); // поліморфізм
+
+        // Прямокутний трикутник
+        System.out.print("Введіть перший катет трикутника: ");
+        double a = sc.nextDouble();
+        System.out.print("Введіть другий катет трикутника: ");
+        double b = sc.nextDouble();
+        Shape triangle = new RightTriangle(a, b); // поліморфізм
+
+        // Вивід результатів
+        System.out.println("\n=== Результати ===");
+        System.out.println("Площа прямокутника: " + rectangle.getArea());
+        System.out.println("Площа прямокутного трикутника: " + triangle.getArea());
+
+        sc.close();
+    }
+}
