@@ -50,12 +50,22 @@ class TriangleI implements ShapeI {
     }
 }
 
-public class Main {ing[] args) {     // Прямокутник
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Прямокутник
         System.out.print("Введіть довжину прямокутника (a): ");
         double a = sc.nextDouble();
-        System.out.print("Введіть ши System.out.print("Введіть катет d прямокутного трикутника: ");
-        double d = sc.nextDouble();
+        System.out.print("Введіть ширину прямокутника (b): ");
+        double b = sc.nextDouble();
+        ShapeI rect = new RectangleI(a, b);
 
+        // Трикутник
+        System.out.print("Введіть катет c прямокутного трикутника: ");
+        double c = sc.nextDouble();
+        System.out.print("Введіть катет d прямокутного трикутника: ");
+        double d = sc.nextDouble();
         TriangleI tri = new TriangleI(c, d);
 
         // Вивід результатів
