@@ -1,1 +1,63 @@
 
+class Student {
+    public String name;
+    private int age;
+    protected String group;
+    static int count = 0;
+
+    {
+        System.out.println("New student object is being created...");
+    }
+
+    public Student() {
+        this("Unknown", 0, "Unknown");
+    }
+
+    public Student(String name, int age, String group) {
+        this.name = name;
+        this.age = age;
+        this.group = group;
+        count++;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        if (age > 0) {
+            this.age = age;
+        } else {
+            System.out.println("Age must be positive!");
+        }
+    }
+
+    public void showInfo() {
+        System.out.println("Name: " + name + ", Age: " + age + ", Group: " + group);
+    }
+
+    public boolean isEqual(Student other) {
+        return this.name.equals(other.name) &&
+                this.age == other.age &&
+                this.group.equals(other.group);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Student s1 = new Student("Yurii Lazarenko", 18, "IPZ-11");
+        Student s2 = new Student("Oleg Petrenko", 19, "IPZ-11");
+        Student s3 = new Student("Yurii Lazarenko", 18, "IPZ-11");
+
+        s1.showInfo();
+        s2.showInfo();
+
+        s2.setAge(20);
+        System.out.println("New age of s2: " + s2.getAge());
+
+        System.out.println("Total number of students: " + Student.count);
+
+        System.out.println("s1 equals s2? " + s1.isEqual(s2));
+        System.out.println("s1 equals s3? " + s1.isEqual(s3));
+    }
+}
