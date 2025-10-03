@@ -1,0 +1,107 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Subscriber> phoneBook = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        // Попереднє заповнення (не менше 10 елементів)
+        phoneBook.add(new Subscriber("Lazarenko", "0671234567"));
+        phoneBook.add(new Subscriber("Shevchenko", "0509876543"));
+        phoneBook.add(new Subscriber("Koval", "0931122334"));
+        phoneBook.add(new Subscriber("Melnyk", "0689988776"));
+        phoneBook.add(new Subscriber("Bondarenko", "0994455667"));
+        phoneBook.add(new Subscriber("Tkachenko", "0732233445"));
+        phoneBook.add(new Subscriber("Kravchenko", "0667788990"));
+        phoneBook.add(new Subscriber("Oliynyk", "0973344556"));
+        phoneBook.add(new Subscriber("Ivanenko", "0635566778"));
+        phoneBook.add(new Subscriber("Hrytsenko", "0956677889"));
+
+        while (true) {
+            System.out.println("\nМеню:");
+            System.out.println("1. Додати абонента");
+            System.out.println("2. Пошук абонента за прізвищем");
+            System.out.println("3. Видалити абонента");
+            System.out.println("4. Показати всіх абонентів");
+            System.out.println("0. Вихід");
+            System.out.print("Ваш вибір: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // очистка буфера
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Введіть прізвище: ");
+                    String surname = scanner.nextLine();
+                    System.out.print("Введіть номер телефону: ");
+                    String phone = scanner.nextLine();
+                    phoneBook.add(new Subscriber(surname, phone));
+                    System.out.println("Абонент доданий.");
+                    break;
+
+                case 2:
+                    System.out.print("Введіть прізвище для пошуку: ");
+                    String searchName = scanner.nextLine();
+                    boolean found = false;
+                    for (Subscriber s : phoneBook) {
+                        if (s.getSurname().equalsIgnoreCase(searchName)) {
+                            System.out.println("Знайдено: " + s);
+                            found = true;
+                        }
+                    }
+                    if (!found) {
+                        System.out.println("Абонента не знайдено.");
+                    }
+                    break;
+
+                case 3:
+                    System.out.print("Введіть прізвище для видалення: ");
+                    String deleteName = scanner.nextLine();
+                    boolean removed = phoneBook.removeIf(s -> s.getSurname().equalsIgnoreCase(deleteName));
+                    if (removed) {
+                        System.out.println("Абонент видалений.");
+                    } else {
+                        System.out.println("Абонента не знайдено.");
+                    }
+                    break;
+
+                case 4:
+                    System.out.println("Список абонентів:");
+                    for (Subscriber s : phoneBook) {
+                        System.out.println(s);
+                    }
+                    break;
+
+                case 0:
+                    System.out.println("Завершення програми.");
+                    return;
+
+                default:
+                    System.out.println("Невірний вибір. Спробуйте ще раз.");
+            }
+        }
+    }
+}
+
+// Клас абонента
+class Subscriber {
+    private String surname;
+    private String phoneNumber;
+
+    public Subscriber(String surname, String phoneNumber) {
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String toString() {
+        return surname + " — " + phoneNumber;
+    }
+}
