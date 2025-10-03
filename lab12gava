@@ -1,0 +1,17 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter radius: ");
+        double r = scanner.nextDouble();
+
+        System.out.print("Enter central angle (in degrees): ");
+        double angle = scanner.nextDouble();
+
+        double area = Math.PI * r * r * (angle / 360.0);
+
+        System.out.println("Sector area = " + area);
+    }
+}
