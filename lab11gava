@@ -1,0 +1,24 @@
+import javax.swing.*;
+import java.awt.event.*;
+
+public class Main {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Mouse Adapter Example");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+        frame.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int x = e.getX();
+                int width = frame.getContentPane().getWidth();
+                if (x > width) {
+                    System.out.println("Cursor exited the right boundary of the window");
+                }
+            }
+        });
+
+        frame.setVisible(true);
+    }
+}
