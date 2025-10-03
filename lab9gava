@@ -1,0 +1,80 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Queue;
+import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+class DataGenerator implements Runnable {
+    private final int count;
+    private final int min;
+    private final int max;
+    private final Queue<Integer> resultsQueue;
+    private final int threadId;
+
+    public DataGenerator(int count, int min, int max, Queue<Integer> resultsQueue, int threadId) {
+        this.count = count;
+        this.min = min;
+        this.max = max;
+        this.resultsQueue = resultsQueue;
+        this.threadId = threadId;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Thread " + threadId + " has started. Task: generate " + count + " numbers.");
+        Random rand = new Random();
+        for (int i = 0; i < count; i++) {
+            int randomNumber = rand.nextInt(max - min + 1) + min;
+            resultsQueue.add(randomNumber);
+        }
+        System.out.println("Thread " + threadId + " has finished its work.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        final int N = 15;
+        final int M = 2;
+        final int a = 15;
+        final int b = 30;
+
+        System.out.println("--- Task for Variant 1 ---");
+        System.out.println("Total number of elements (N): " + N);
+        System.out.println("Number of threads (M): " + M);
+        System.out.println("Value range: [" + a + ", " + b + "]\n");
+
+        Queue<Integer> combinedResults = new ConcurrentLinkedQueue<>();
+        List<Thread> threads = new ArrayList<>();
+
+        int baseCount = N / M;
+        int remainder = N % M;
+
+        for (int i = 0; i < M; i++) {
+            int numbersToGenerate = baseCount;
+            if (i == M - 1) {
+                numbersToGenerate += remainder;
+            }
+            
+            Thread t = new Thread(new DataGenerator(numbersToGenerate, a, b, combinedResults, i + 1));
+            threads.add(t);
+            t.start();
+        }
+
+        for (Thread t : threads) {
+            t.join();
+        }
+
+        System.out.println("\nAll threads have finished their work. Combining results...");
+
+        int[] finalArray = new int[N];
+        for (int i = 0; i < N; i++) {
+            finalArray[i] = combinedResults.poll();
+        }
+
+        System.out.println("=========================================");
+        System.out.println("✅ Final combined array (" + finalArray.length + " elements):");
+        System.out.println(Arrays.toString(finalArray));
+        System.out.println("=========================================");
+    }
+}
