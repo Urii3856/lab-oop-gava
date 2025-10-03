@@ -1,0 +1,29 @@
+import javax.swing.*;
+
+public class Main {
+    public static void main(String[] args) {
+        JFrame frame1 = new JFrame("Приховане вікно");
+        frame1.setSize(400, 300);
+        frame1.setLocation(50, 60);
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame1.setVisible(false);
+
+        System.out.println("=== Спосіб 1 ===");
+        System.out.println("Title: " + frame1.getTitle());
+        System.out.println("Size: " + frame1.getSize().width + "x" + frame1.getSize().height);
+        System.out.println("Location: x=" + frame1.getX() + ", y=" + frame1.getY());
+        System.out.println("Стан: приховане");
+
+        JFrame frame2 = new JFrame();
+        frame2.setTitle("Приховане вікно");
+        frame2.setBounds(50, 60, 400, 300);
+        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame2.setVisible(false);
+
+        System.out.println("\n=== Спосіб 2 ===");
+        System.out.println("Title: " + frame2.getTitle());
+        System.out.println("Size: " + frame2.getSize().width + "x" + frame2.getSize().height);
+        System.out.println("Location: x=" + frame2.getX() + ", y=" + frame2.getY());
+        System.out.println("Стан: приховане");
+    }
+}
