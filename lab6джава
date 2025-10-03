@@ -1,0 +1,82 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        // Карта: Прізвище -> Номер телефону
+        Map<String, String> phoneBook = new HashMap<>();
+
+        // Додаємо мінімум 10 елементів
+        phoneBook.put("Іваненко", "380931234567");
+        phoneBook.put("Петренко", "380971112233");
+        phoneBook.put("Шевченко", "380661234567");
+        phoneBook.put("Коваленко", "380503214567");
+        phoneBook.put("Мельник", "380631234890");
+        phoneBook.put("Бондар", "380991112255");
+        phoneBook.put("Кравчук", "380671234111");
+        phoneBook.put("Лисенко", "380501234222");
+        phoneBook.put("Савченко", "380931239999");
+        phoneBook.put("Гончар", "380681234333");
+
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n--- Телефонний довідник ---");
+            System.out.println("1. Додати абонента");
+            System.out.println("2. Знайти номер за прізвищем");
+            System.out.println("3. Видалити абонента");
+            System.out.println("4. Вивести всіх абонентів");
+            System.out.println("5. Вихід");
+            System.out.print("Ваш вибір: ");
+            int choice = sc.nextInt();
+            sc.nextLine(); // очищення буфера
+
+            switch (choice) {
+                case 1: // додавання
+                    System.out.print("Введіть прізвище: ");
+                    String surname = sc.nextLine();
+                    System.out.print("Введіть номер телефону: ");
+                    String phone = sc.nextLine();
+                    phoneBook.put(surname, phone);
+                    System.out.println("Абонента додано!");
+                    break;
+
+                case 2: // пошук
+                    System.out.print("Введіть прізвище: ");
+                    String search = sc.nextLine();
+                    if (phoneBook.containsKey(search)) {
+                        System.out.println("Номер телефону: " + phoneBook.get(search));
+                    } else {
+                        System.out.println("Абонента не знайдено.");
+                    }
+                    break;
+
+                case 3: // видалення
+                    System.out.print("Введіть прізвище для видалення: ");
+                    String del = sc.nextLine();
+                    if (phoneBook.remove(del) != null) {
+                        System.out.println("Абонента видалено.");
+                    } else {
+                        System.out.println("Абонента не знайдено.");
+                    }
+                    break;
+
+                case 4: // вивести всіх
+                    System.out.println("Усі абоненти:");
+                    for (Map.Entry<String, String> entry : phoneBook.entrySet()) {
+                        System.out.println(entry.getKey() + " -> " + entry.getValue());
+                    }
+                    break;
+
+                case 5: // вихід
+                    System.out.println("Програму завершено.");
+                    sc.close();
+                    return;
+
+                default:
+                    System.out.println("Невірний вибір.");
+            }
+        }
+    }
+}
