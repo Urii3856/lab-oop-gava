@@ -1,0 +1,58 @@
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+public class Main {
+    public static void main(String[] args) {
+        // 1. Фрагмент тексту згідно варіанта
+        String text = "В склад програмного забезпечення комп’ютерів входять як універсальні засоби " +
+                "(системне програмне забезпечення), так і прикладні програми, орієнтовані на окремі " +
+                "проблеми галузі застосування (прикладне програмне забезпечення).";
+
+        // 2. Ключ: прізвище + ім’я + по-батькові
+        String surname = "Lazarenko";
+        String name = "Yurii";
+        String patronymic = "Olegovych";
+        String key = surname + name + patronymic;
+
+        System.out.println("Оригінальний текст:");
+        System.out.println(text);
+        System.out.println();
+
+        // 3. Кодування
+        String encoded = encode(text, key);
+        System.out.println("Закодований текст:");
+        System.out.println(encoded);
+        System.out.println();
+
+        // 4. Розкодування
+        String decoded = decode(encoded, key);
+        System.out.println("Розкодований текст:");
+        System.out.println(decoded);
+    }
+
+    // Метод кодування: XOR + Base64
+    public static String encode(String plain, String key) {
+        byte[] plainBytes = plain.getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+        byte[] out = new byte[plainBytes.length];
+
+        for (int i = 0; i < plainBytes.length; i++) {
+            out[i] = (byte) (plainBytes[i] ^ keyBytes[i % keyBytes.length]);
+        }
+
+        return Base64.getEncoder().encodeToString(out);
+    }
+
+    // Метод розкодування: Base64 -> XOR з тим самим ключем
+    public static String decode(String encodedBase64, String key) {
+        byte[] enc = Base64.getDecoder().decode(encodedBase64);
+        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+        byte[] out = new byte[enc.length];
+
+        for (int i = 0; i < enc.length; i++) {
+            out[i] = (byte) (enc[i] ^ keyBytes[i % keyBytes.length]);
+        }
+
+        return new String(out, StandardCharsets.UTF_8);
+    }
+}
