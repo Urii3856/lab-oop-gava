@@ -1,1 +1,39 @@
+interface Planet {
+    void reportAboutMovement();
+    void reportAboutLife();
+}
+
+class Earth implements Planet {
+    public void reportAboutMovement() {
+        System.out.println("Земля.Рухається навколо Сонця.");
+    }
+
+    public void reportAboutLife() {
+        System.out.println("Земля.На поверхні існує життя.");
+    }
+}
+
+class Moon implements Planet {
+    public void reportAboutMovement() {
+        System.out.println("Місяць.Рухається навколо Землі.");
+    }
+
+    public void reportAboutLife() {
+        System.out.println("Місяць.Життя на поверхні не виявлено.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Planet[] planets = { new Earth(), new Moon() };
+
+        System.out.println("--- Демонстрація поліморфізму ---\n");
+
+        for (Planet p : planets) {
+            p.reportAboutMovement();
+            p.reportAboutLife();
+            System.out.println();
+        }
+    }
+}
 
