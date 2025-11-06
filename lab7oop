@@ -6,7 +6,6 @@ public class Main {
         ArrayList<Subscriber> phoneBook = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
-        // Попереднє заповнення (не менше 10 елементів)
         phoneBook.add(new Subscriber("Lazarenko", "0671234567"));
         phoneBook.add(new Subscriber("Shevchenko", "0509876543"));
         phoneBook.add(new Subscriber("Koval", "0931122334"));
