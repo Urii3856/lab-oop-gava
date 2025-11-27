@@ -1,80 +1,92 @@
-import java.util.ArrayList;
+import java.io.*;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-class DataGenerator implements Runnable {
-    private final int count;
-    private final int min;
-    private final int max;
-    private final Queue<Integer> resultsQueue;
-    private final int threadId;
-
-    public DataGenerator(int count, int min, int max, Queue<Integer> resultsQueue, int threadId) {
-        this.count = count;
-        this.min = min;
-        this.max = max;
-        this.resultsQueue = resultsQueue;
-        this.threadId = threadId;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Thread " + threadId + " has started. Task: generate " + count + " numbers.");
-        Random rand = new Random();
-        for (int i = 0; i < count; i++) {
-            int randomNumber = rand.nextInt(max - min + 1) + min;
-            resultsQueue.add(randomNumber);
-        }
-        System.out.println("Thread " + threadId + " has finished its work.");
-    }
-}
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        final int N = 15;
-        final int M = 2;
-        final int a = 15;
-        final int b = 30;
+    public static void main(String[] args) throws IOException {
 
-        System.out.println("--- Task for Variant 1 ---");
-        System.out.println("Total number of elements (N): " + N);
-        System.out.println("Number of threads (M): " + M);
-        System.out.println("Value range: [" + a + ", " + b + "]\n");
+        final int N = 15; // Розмірність масиву
+        final int M = 2;  // Кількість потоків для об'єднання
+        final int A = 15; // Мінімальне значення
+        final int B = 30; // Максимальне значення
 
-        Queue<Integer> combinedResults = new ConcurrentLinkedQueue<>();
-        List<Thread> threads = new ArrayList<>();
+        System.out.println("N = " + N + ", M = " + M + ", Діапазон: [" + A + ", " + B + "]\n");
 
+        // 1. Розподіл N на M частин
         int baseCount = N / M;
         int remainder = N % M;
 
+        // Список для зберігання M окремих потоків вводу
+        List<InputStream> inputStreams = new ArrayList<>();
+
+        System.out.println("Етап 1: Генерація даних та створення M = " + M + " потоків вводу:");
+
+        // 2. Генерація даних та створення M окремих потоків вводу
         for (int i = 0; i < M; i++) {
-            int numbersToGenerate = baseCount;
-            if (i == M - 1) {
-                numbersToGenerate += remainder;
+            int partSize = baseCount + (i == M - 1 ? remainder : 0);
+
+            // Створення та заповнення частини масиву
+            int[] partArray = generateRandomArray(partSize, A, B);
+            System.out.println("  Потік " + (i + 1) + " (розмір " + partSize + "): " + Arrays.toString(partArray).substring(0, Math.min(20, Arrays.toString(partArray).length())) + "...");
+
+            // Перетворення int[] на потік байтів для I/O потоку
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(baos);
+
+            for (int val : partArray) {
+                dos.writeInt(val);
             }
-            
-            Thread t = new Thread(new DataGenerator(numbersToGenerate, a, b, combinedResults, i + 1));
-            threads.add(t);
-            t.start();
+            dos.flush();
+
+            // Створення потоку вводу з отриманого масиву байтів
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            inputStreams.add(bais);
         }
 
-        for (Thread t : threads) {
-            t.join();
+        System.out.println("\nЕтап 2: Об'єднання M потоків в один SequenceInputStream.");
+
+        // 3. Об'єднання потоків за допомогою SequenceInputStream
+        Enumeration<InputStream> en = Collections.enumeration(inputStreams);
+
+        try (SequenceInputStream sequenceStream = new SequenceInputStream(en);
+             DataInputStream dis = new DataInputStream(sequenceStream)) {
+
+            System.out.println("Етап 3: Зчитування N = " + N + " елементів з об'єднаного потоку.");
+
+            int[] finalArray = new int[N];
+            int readCount = 0;
+
+            // 4. Зчитування даних з об'єднаного потоку
+            for (int i = 0; i < N; i++) {
+                try {
+                    finalArray[i] = dis.readInt();
+                    readCount++;
+                } catch (EOFException e) {
+                    break;
+                }
+            }
+
+            System.out.println("\n--- Результат ---");
+            System.out.println("Зчитано елементів: " + readCount);
+            System.out.println("✅ Фінальний об'єднаний масив (N=" + N + "):");
+            System.out.println(Arrays.toString(finalArray));
+
+        } catch (IOException e) {
+            System.err.println("Помилка I/O: " + e.getMessage());
         }
+    }
 
-        System.out.println("\nAll threads have finished their work. Combining results...");
 
-        int[] finalArray = new int[N];
-        for (int i = 0; i < N; i++) {
-            finalArray[i] = combinedResults.poll();
+    private static int[] generateRandomArray(int size, int min, int max) {
+        int[] array = new int[size];
+        Random random = new Random();
+        for (int i = 0; i < size; i++) {
+            array[i] = random.nextInt(max - min + 1) + min;
         }
-
-        System.out.println("=========================================");
-        System.out.println("✅ Final combined array (" + finalArray.length + " elements):");
-        System.out.println(Arrays.toString(finalArray));
-        System.out.println("=========================================");
+        return array;
     }
 }
