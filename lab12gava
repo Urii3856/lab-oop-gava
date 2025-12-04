@@ -1,17 +1,76 @@
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Main {
+public class Main extends JFrame {
+
+    // Оголошуємо компоненти вікна
+    private JTextField radiusField;
+    private JTextField angleField;
+    private JLabel resultLabel;
+
+    public Main() {
+        setTitle("Площа сектора кола");
+        setSize(350, 250);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new GridLayout(4, 2, 10, 10));
+
+        // 2. Створення компонентів
+        JLabel labelRadius = new JLabel("  Введітьус (r):");
+        radiusField = new JTextField();
+
+        JLabel labelAngle = new JLabel("  Введіть кут (°):");
+        angleField = new JTextField();
+
+        JButton calculateButton = new JButton("Обчислити");
+        resultLabel = new JLabel("  Результат: ");
+
+        // 3. Додавання функціоналу кнопці
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculateArea();
+            }
+        });
+
+        // 4. Додавання компонентів у вікно
+        add(labelRadius);
+        add(radiusField);
+
+        add(labelAngle);
+        add(angleField);
+
+        add(new JLabel(""));
+        add(calculateButton);
+
+        add(resultLabel);
+
+        setVisible(true);
+    }
+
+    private void calculateArea() {
+        try {
+            String radiusText = radiusField.getText();
+            String angleText = angleField.getText();
+
+            // Заміна коми на крапку
+            double r = Double.parseDouble(radiusText.replace(",", "."));
+            double angle = Double.parseDouble(angleText.replace(",", "."));
+
+            double area = Math.PI * r * r * (angle / 360.0);
+
+            resultLabel.setText(String.format("  Результат: %.2f", area));
+
+        } catch (NumberFormatException ex) {
+            // Якщо ввели букви замість цифр
+            JOptionPane.showMessageDialog(this, "Будь ласка, введіть коректні числа!", "Помилка", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter radius: ");
-        double r = scanner.nextDouble();
-
-        System.out.print("Enter central angle (in degrees): ");
-        double angle = scanner.nextDouble();
-
-        double area = Math.PI * r * r * (angle / 360.0);
-
-        System.out.println("Sector area = " + area);
+        // Запуск вікна
+        new Main();
     }
 }
