@@ -1,0 +1,74 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
+class Phone {
+    String number;
+    String model;
+    double weight;
+
+    // Конструктор
+    public Phone(String number, String model, double weight) {
+        this.number = number;
+        this.model = model;
+        this.weight = weight;
+    }
+
+    // Метод receiveCall()
+    public void receiveCall(String name) {
+        System.out.println("Дзвонить " + name);
+    }
+
+    // Метод getNumber()
+    public String getNumber() {
+        return number;
+    }
+
+    @Override
+    public String toString() {
+        return "Номер: " + number + ", Модель: " + model + ", Вага: " + weight;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Створення трьох об'єктів
+        Phone phone1 = new Phone("0671234567", "Samsung A52", 180.5);
+        Phone phone2 = new Phone("0939876543", "iPhone 12", 164.0);
+        Phone phone3 = new Phone("0505557788", "Xiaomi Redmi Note 12", 195.2);
+
+        // Колекція для збереження інформації
+        ArrayList<Phone> phones = new ArrayList<>();
+        phones.add(phone1);
+        phones.add(phone2);
+        phones.add(phone3);
+
+        // Виведення значень змінних
+        System.out.println("=== Інформація про телефони ===");
+        for (Phone phone : phones) {
+            System.out.println(phone);
+        }
+
+        // Виклик методів
+        System.out.println("\n=== Виклик методів ===");
+        phone1.receiveCall("Андрій");
+        System.out.println("Номер телефону: " + phone1.getNumber());
+
+        phone2.receiveCall("Марія");
+        System.out.println("Номер телефону: " + phone2.getNumber());
+
+        phone3.receiveCall("Олег");
+        System.out.println("Номер телефону: " + phone3.getNumber());
+
+        // Запис у файл
+        try (FileWriter writer = new FileWriter("phones.txt")) {
+            for (Phone p : phones) {
+                writer.write(p.toString() + "\n");
+            }
+            System.out.println("\nДані збережено у файл phones.txt");
+        } catch (IOException e) {
+            System.out.println("Помилка під час запису файлу: " + e.getMessage());
+        }
+    }
+}
