@@ -1,0 +1,107 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.*;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Random;
+
+// Назва класу змінена на Main, щоб файл міг називатися Main.java
+public class Main {
+
+    // Константи згідно з Варіантом 1
+    private static final int N_IO = 15;
+    private static final int M_IO = 2;
+    private static final int A_IO = 15;
+    private static final int B_IO = 30;
+
+    // Параметри фрейму для Варіанта 1
+    private static final int FRAME_WIDTH = 400;
+    private static final int FRAME_HEIGHT = 300;
+    private static final int FRAME_X = 50;
+    private static final int FRAME_Y = 60;
+    private static final String FRAME_TITLE = "Приховане вікно";
+
+    public static void main(String[] args) {
+        System.out.println("--- Завдання 1: I/O Потоки ---");
+        runIoTask();
+
+        SwingUtilities.invokeLater(() -> {
+            System.out.println("\n--- Завдання 2: Фреймове вікно та Меню ---");
+            createFrameAndMenu();
+        });
+    }
+
+    private static void runIoTask() {
+        int base = N_IO / M_IO;
+        int rem = N_IO % M_IO;
+        List<InputStream> streams = new ArrayList<>();
+        Random r = new Random();
+
+        for (int i = 0; i < M_IO; i++) {
+            int size = base + (i == M_IO - 1 ? rem : 0);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(baos);
+            try {
+                for (int j = 0; j < size; j++) {
+                    dos.writeInt(r.nextInt(B_IO - A_IO + 1) + A_IO);
+                }
+                streams.add(new ByteArrayInputStream(baos.toByteArray()));
+            } catch (IOException e) { e.printStackTrace(); }
+        }
+
+        Enumeration<InputStream> en = Collections.enumeration(streams);
+        try (DataInputStream dis = new DataInputStream(new SequenceInputStream(en))) {
+            System.out.print("Результат об'єднання: ");
+            for (int i = 0; i < N_IO; i++) {
+                System.out.print(dis.readInt() + " ");
+            }
+            System.out.println();
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    private static void createFrameAndMenu() {
+        // Створення вікна двома способами (логіка об'єднана для стислості)
+        JFrame frame = new JFrame(FRAME_TITLE); // Встановлення title
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT); // Встановлення size
+        frame.setLocation(FRAME_X, FRAME_Y); // Встановлення location
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Налаштування меню згідно з Варіантом 1
+        JMenuBar bar = new JMenuBar();
+        JMenu file = new JMenu("Файл");
+        JMenu edit = new JMenu("Редагування");
+        JMenu view = new JMenu("Вигляд");
+        JMenu help = new JMenu("Допомога");
+
+        // Елементи меню "Файл"
+        JCheckBoxMenuItem save = new JCheckBoxMenuItem("Зберегти"); // Пункт з прапорцем
+        JMenuItem open = new JMenuItem("Відкрити"); // Звичайний пункт
+        JMenu send = new JMenu("Надіслати"); // Підменю
+
+        send.add(new JMenuItem("Повідомлення")); // Підпункт
+        send.add(new JMenuItem("Факс")); // Підпункт
+
+        file.add(save);
+        file.add(open);
+        file.add(send);
+
+        bar.add(file);
+        bar.add(edit);
+        bar.add(view);
+        bar.add(help);
+
+        frame.setJMenuBar(bar);
+
+        // Вивід параметрів на консоль
+        System.out.println("Title: " + frame.getTitle()); // +
+        System.out.println("Location: x=" + frame.getX() + ", y=" + frame.getY()); // +
+        System.out.println("Стан: " + (frame.isVisible() ? "видиме" : "приховане")); // +
+
+        frame.setVisible(false); // Стан: приховане згідно з варіантом
+    }
+}
