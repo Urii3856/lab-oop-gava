@@ -10,16 +10,13 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Random;
 
-// Назва класу змінена на Main, щоб файл міг називатися Main.java
 public class Main {
 
-    // Константи згідно з Варіантом 1
     private static final int N_IO = 15;
     private static final int M_IO = 2;
     private static final int A_IO = 15;
     private static final int B_IO = 30;
 
-    // Параметри фрейму для Варіанта 1
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 300;
     private static final int FRAME_X = 50;
@@ -50,8 +47,11 @@ public class Main {
                 for (int j = 0; j < size; j++) {
                     dos.writeInt(r.nextInt(B_IO - A_IO + 1) + A_IO);
                 }
+                dos.flush();
                 streams.add(new ByteArrayInputStream(baos.toByteArray()));
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) { 
+                e.printStackTrace(); 
+            }
         }
 
         Enumeration<InputStream> en = Collections.enumeration(streams);
@@ -61,30 +61,29 @@ public class Main {
                 System.out.print(dis.readInt() + " ");
             }
             System.out.println();
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) { 
+            e.printStackTrace(); 
+        }
     }
 
     private static void createFrameAndMenu() {
-        // Створення вікна двома способами (логіка об'єднана для стислості)
-        JFrame frame = new JFrame(FRAME_TITLE); // Встановлення title
-        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT); // Встановлення size
-        frame.setLocation(FRAME_X, FRAME_Y); // Встановлення location
+        JFrame frame = new JFrame(FRAME_TITLE);
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        frame.setLocation(FRAME_X, FRAME_Y);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Налаштування меню згідно з Варіантом 1
         JMenuBar bar = new JMenuBar();
         JMenu file = new JMenu("Файл");
         JMenu edit = new JMenu("Редагування");
         JMenu view = new JMenu("Вигляд");
         JMenu help = new JMenu("Допомога");
 
-        // Елементи меню "Файл"
-        JCheckBoxMenuItem save = new JCheckBoxMenuItem("Зберегти"); // Пункт з прапорцем
-        JMenuItem open = new JMenuItem("Відкрити"); // Звичайний пункт
-        JMenu send = new JMenu("Надіслати"); // Підменю
+        JCheckBoxMenuItem save = new JCheckBoxMenuItem("Зберегти");
+        JMenuItem open = new JMenuItem("Відкрити");
+        JMenu send = new JMenu("Надіслати");
 
-        send.add(new JMenuItem("Повідомлення")); // Підпункт
-        send.add(new JMenuItem("Факс")); // Підпункт
+        send.add(new JMenuItem("Повідомлення"));
+        send.add(new JMenuItem("Факс"));
 
         file.add(save);
         file.add(open);
@@ -97,11 +96,10 @@ public class Main {
 
         frame.setJMenuBar(bar);
 
-        // Вивід параметрів на консоль
-        System.out.println("Title: " + frame.getTitle()); // +
-        System.out.println("Location: x=" + frame.getX() + ", y=" + frame.getY()); // +
-        System.out.println("Стан: " + (frame.isVisible() ? "видиме" : "приховане")); // +
+        System.out.println("Title: " + frame.getTitle());
+        System.out.println("Location: x=" + frame.getX() + ", y=" + frame.getY());
+        System.out.println("Стан: " + (frame.isVisible() ? "видиме" : "приховане"));
 
-        frame.setVisible(false); // Стан: приховане згідно з варіантом
+        frame.setVisible(false);
     }
 }
